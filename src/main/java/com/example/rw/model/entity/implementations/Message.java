@@ -17,4 +17,14 @@ public class Message implements EntityModel<Long> {
     private String content;
     @ManyToOne
     private News news;
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id){
+        this.id = id;
+    }
 }
