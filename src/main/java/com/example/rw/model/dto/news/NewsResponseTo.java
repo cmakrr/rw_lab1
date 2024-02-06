@@ -15,7 +15,6 @@ public class NewsResponseTo {
     private String title;
     private String content;
     private Long userId;
-    private List<Long> messagesId;
     private List<Long> stickersId;
     private Date creationDate;
     private Date updateDate;

@@ -6,10 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
-
-import java.util.List;
 
 @Entity
 @Data
@@ -23,8 +20,6 @@ public class User implements EntityModel<Long> {
     private String password;
     private String firstName;
     private String lastName;
-    @OneToMany(mappedBy = "user")
-    private List<News> newsList;
 
     @Override
     public Long getId() {

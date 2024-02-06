@@ -4,7 +4,6 @@ import com.example.rw.model.entity.interfaces.EntityModel;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Entity
@@ -15,8 +14,7 @@ public class Message implements EntityModel<Long> {
     @Id
     private Long id;
     private String content;
-    @ManyToOne
-    private News news;
+    private Long newsId;
 
     @Override
     public Long getId() {

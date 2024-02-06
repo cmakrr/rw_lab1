@@ -2,12 +2,10 @@ package com.example.rw.model.entity.implementations;
 
 
 import com.example.rw.model.entity.interfaces.EntityModel;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -28,12 +26,9 @@ public class News implements EntityModel<Long> {
     private Date creationDate;
     @UpdateTimestamp
     private Date updateDate;
-    @ManyToOne
-    private User user;
-    @OneToMany(mappedBy = "news")
-    private List<Message> messages;
-    @ManyToMany(mappedBy = "newsList")
-    private List<Sticker> stickers;
+    private Long userId;
+    @ElementCollection
+    private List<Long> stickerIdList;
 
     @Override
     public Long getId() {
