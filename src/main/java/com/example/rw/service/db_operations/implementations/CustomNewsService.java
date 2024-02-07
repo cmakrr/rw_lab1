@@ -1,6 +1,6 @@
 package com.example.rw.service.db_operations.implementations;
 
-import com.example.rw.exception.not_found.EntityNotFoundException;
+import com.example.rw.exception.model.not_found.EntityNotFoundException;
 import com.example.rw.model.entity.implementations.News;
 import com.example.rw.repository.interfaces.NewsRepository;
 import com.example.rw.service.db_operations.interfaces.NewsService;
@@ -33,7 +33,10 @@ public class CustomNewsService implements NewsService {
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        return newsRepository.deleteById(id);
+    public void deleteById(Long id) throws EntityNotFoundException {
+        boolean wasDeleted = newsRepository.deleteById(id);
+        if(!wasDeleted){
+            throw new EntityNotFoundException(id);
+        }
     }
 }

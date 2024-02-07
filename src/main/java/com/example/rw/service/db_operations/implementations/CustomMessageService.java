@@ -1,6 +1,6 @@
 package com.example.rw.service.db_operations.implementations;
 
-import com.example.rw.exception.not_found.EntityNotFoundException;
+import com.example.rw.exception.model.not_found.EntityNotFoundException;
 import com.example.rw.model.entity.implementations.Message;
 import com.example.rw.repository.interfaces.MessageRepository;
 import com.example.rw.service.db_operations.interfaces.MessageService;
@@ -33,7 +33,10 @@ public class CustomMessageService implements MessageService {
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        return messageRepository.deleteById(id);
+    public void deleteById(Long id) throws EntityNotFoundException {
+        boolean wasDeleted = messageRepository.deleteById(id);
+        if(!wasDeleted){
+            throw new EntityNotFoundException(id);
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.example.rw.service.db_operations.implementations;
 
-import com.example.rw.exception.not_found.EntityNotFoundException;
+import com.example.rw.exception.model.not_found.EntityNotFoundException;
 import com.example.rw.model.entity.implementations.Sticker;
 import com.example.rw.repository.interfaces.StickerRepository;
 import com.example.rw.service.db_operations.interfaces.StickerService;
@@ -33,7 +33,10 @@ public class CustomStickerService implements StickerService {
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        return stickerRepository.deleteById(id);
+    public void deleteById(Long id) throws EntityNotFoundException {
+        boolean wasDeleted = stickerRepository.deleteById(id);
+        if(!wasDeleted){
+            throw new EntityNotFoundException(id);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.rw.exception.not_found;
+package com.example.rw.exception.model.not_found;
 
 public class NotFoundException extends RuntimeException {
 
