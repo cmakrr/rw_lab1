@@ -66,6 +66,6 @@ public class MessageController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteMessageById(@PathVariable Long id) {
         messageService.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

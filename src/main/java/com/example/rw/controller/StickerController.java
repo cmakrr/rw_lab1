@@ -66,6 +66,6 @@ public class StickerController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteStickerById(@PathVariable Long id) {
         stickerService.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
