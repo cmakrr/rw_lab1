@@ -1,4 +1,4 @@
-package com.example.rw.exception.dto_converting;
+package com.example.rw.exception.model.dto_converting;
 
 public class ToConvertingException extends RuntimeException {
 
