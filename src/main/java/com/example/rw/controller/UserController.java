@@ -8,7 +8,6 @@ import com.example.rw.service.dto_converter.interfaces.UserToConverter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +29,7 @@ public class UserController {
     private final UserToConverter userToConverter;
 
     @PostMapping("/create")
-    public ResponseEntity<UserResponseTo> createUser(@RequestBody @Valid UserRequestTo userRequestTo){
+    public ResponseEntity<UserResponseTo> createUser(@RequestBody @Valid UserRequestTo userRequestTo) {
         User user = userToConverter.convertToEntity(userRequestTo);
         userService.save(user);
         UserResponseTo userResponseTo = userToConverter.convertToDto(user);
@@ -40,20 +39,20 @@ public class UserController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<UserResponseTo>> receiveAllUsers(){
+    public ResponseEntity<List<UserResponseTo>> receiveAllUsers() {
         List<User> users = userService.findAll();
         List<UserResponseTo> responseList = users.stream().map(userToConverter::convertToDto).toList();
         return ResponseEntity.ok(responseList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseTo> receiveById(@PathVariable Long id){
+    public ResponseEntity<UserResponseTo> receiveById(@PathVariable Long id) {
         UserResponseTo userResponseTo = userToConverter.convertToDto(userService.findById(id));
         return ResponseEntity.ok(userResponseTo);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<UserResponseTo> updateUser(@PathVariable Long id, @RequestBody @Valid UserRequestTo userRequestTo){
+    public ResponseEntity<UserResponseTo> updateUser(@PathVariable Long id, @RequestBody @Valid UserRequestTo userRequestTo) {
         User user = userToConverter.convertToEntity(userRequestTo);
         user.setId(id);
         userService.save(user);
@@ -64,7 +63,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id){
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.ok().build();
     }

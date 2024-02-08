@@ -2,10 +2,7 @@ package com.example.rw.controller;
 
 import com.example.rw.model.dto.sticker.StickerRequestTo;
 import com.example.rw.model.dto.sticker.StickerResponseTo;
-import com.example.rw.model.dto.user.UserRequestTo;
-import com.example.rw.model.dto.user.UserResponseTo;
 import com.example.rw.model.entity.implementations.Sticker;
-import com.example.rw.model.entity.implementations.User;
 import com.example.rw.service.db_operations.interfaces.StickerService;
 import com.example.rw.service.dto_converter.interfaces.StickerToConverter;
 import jakarta.validation.Valid;
@@ -32,7 +29,7 @@ public class StickerController {
     private final StickerToConverter stickerToConverter;
 
     @PostMapping("/create")
-    public ResponseEntity<StickerResponseTo> createSticker(@RequestBody @Valid StickerRequestTo stickerRequestTo){
+    public ResponseEntity<StickerResponseTo> createSticker(@RequestBody @Valid StickerRequestTo stickerRequestTo) {
         Sticker sticker = stickerToConverter.convertToEntity(stickerRequestTo);
         stickerService.save(sticker);
         StickerResponseTo stickerResponseTo = stickerToConverter.convertToDto(sticker);
