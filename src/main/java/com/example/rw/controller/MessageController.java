@@ -1,5 +1,6 @@
 package com.example.rw.controller;
 
+import com.example.rw.exception.model.not_found.EntityNotFoundException;
 import com.example.rw.model.dto.message.MessageRequestTo;
 import com.example.rw.model.dto.message.MessageResponseTo;
 import com.example.rw.model.entity.implementations.Message;
@@ -21,14 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("${api.request.prefix}/message")
+@RequestMapping("${api.request.prefix}/messages")
 @RequiredArgsConstructor
 public class MessageController {
 
     private final MessageService messageService;
     private final MessageToConverter messageToConverter;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<MessageResponseTo> createMessage(@RequestBody @Valid MessageRequestTo messageRequestTo) {
         Message message = messageToConverter.convertToEntity(messageRequestTo);
         messageService.save(message);
@@ -38,7 +39,7 @@ public class MessageController {
                 .body(messageResponseTo);
     }
 
-    @GetMapping("/list")
+    @GetMapping()
     public ResponseEntity<List<MessageResponseTo>> receiveAllMessages() {
         List<Message> messages = messageService.findAll();
         List<MessageResponseTo> responseList = messages.stream()
@@ -54,18 +55,21 @@ public class MessageController {
         return ResponseEntity.ok(messageResponseTo);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<MessageResponseTo> updateMessage(@PathVariable Long id, @RequestBody @Valid MessageRequestTo messageRequestTo) {
+    @PutMapping()
+    public ResponseEntity<MessageResponseTo> updateMessage(@RequestBody @Valid MessageRequestTo messageRequestTo) {
         Message message = messageToConverter.convertToEntity(messageRequestTo);
-        message.setId(id);
         messageService.save(message);
         MessageResponseTo messageResponseTo = messageToConverter.convertToDto(message);
         return ResponseEntity.ok(messageResponseTo);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMessageById(@PathVariable Long id) {
-        messageService.deleteById(id);
+        try {
+            messageService.deleteById(id);
+        } catch (EntityNotFoundException entityNotFoundException){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

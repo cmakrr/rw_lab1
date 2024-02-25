@@ -2,6 +2,7 @@ package com.example.rw.service.db_operations.implementations;
 
 import com.example.rw.exception.model.not_found.EntityNotFoundException;
 import com.example.rw.model.entity.implementations.Message;
+import com.example.rw.model.entity.implementations.User;
 import com.example.rw.repository.interfaces.MessageRepository;
 import com.example.rw.service.db_operations.interfaces.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +35,21 @@ public class CustomMessageService implements MessageService {
 
     @Override
     public void deleteById(Long id) throws EntityNotFoundException {
-        boolean wasDeleted = messageRepository.deleteById(id);
+        boolean wasDeleted = messageRepository.findById(id).isPresent();
         if(!wasDeleted){
             throw new EntityNotFoundException(id);
+        } else{
+            messageRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    public void update(Message entity) {
+        boolean wasUpdated = messageRepository.findById(entity.getId()).isPresent();
+        if(!wasUpdated){
+            throw new EntityNotFoundException();
+        } else{
+            messageRepository.save(entity);
         }
     }
 }

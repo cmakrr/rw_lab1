@@ -1,5 +1,6 @@
 package com.example.rw.controller;
 
+import com.example.rw.exception.model.not_found.EntityNotFoundException;
 import com.example.rw.model.dto.news.NewsRequestTo;
 import com.example.rw.model.dto.news.NewsResponseTo;
 import com.example.rw.model.entity.implementations.News;
@@ -28,7 +29,7 @@ public class NewsController {
     private final NewsService newsService;
     private final NewsToConverter newsToConverter;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<NewsResponseTo> createNews(@RequestBody @Valid NewsRequestTo newsRequestTo) {
         News news = newsToConverter.convertToEntity(newsRequestTo);
         newsService.save(news);
@@ -38,7 +39,7 @@ public class NewsController {
                 .body(newsResponseTo);
     }
 
-    @GetMapping("/list")
+    @GetMapping()
     public ResponseEntity<List<NewsResponseTo>> receiveAllNews() {
         List<News> newsList = newsService.findAll();
         List<NewsResponseTo> responseList = newsList.stream()
@@ -54,18 +55,21 @@ public class NewsController {
         return ResponseEntity.ok(newsResponseTo);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<NewsResponseTo> updateNews(@PathVariable Long id, @RequestBody @Valid NewsRequestTo newsRequestTo) {
+    @PutMapping()
+    public ResponseEntity<NewsResponseTo> updateNews(@RequestBody @Valid NewsRequestTo newsRequestTo) {
         News news = newsToConverter.convertToEntity(newsRequestTo);
-        news.setId(id);
         newsService.save(news);
         NewsResponseTo newsResponseTo = newsToConverter.convertToDto(news);
         return ResponseEntity.ok(newsResponseTo);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNewsById(@PathVariable Long id) {
-        newsService.deleteById(id);
+        try {
+            newsService.deleteById(id);
+        } catch (EntityNotFoundException entityNotFoundException){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

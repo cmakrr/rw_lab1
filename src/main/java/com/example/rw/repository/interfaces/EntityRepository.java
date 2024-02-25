@@ -11,7 +11,7 @@ public interface EntityRepository<I,E extends EntityModel<I>> {
 
     List<E> findAll();
 
-    void save(E entity);
+    E save(E entity);
 
-    boolean deleteById(I id);
+    void deleteById(I id);
 }

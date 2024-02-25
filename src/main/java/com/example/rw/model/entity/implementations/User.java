@@ -6,10 +6,14 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import lombok.Data;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
+@Table(name = "tbl_user")
 public class User implements EntityModel<Long> {
 
     @GeneratedValue
@@ -18,8 +22,8 @@ public class User implements EntityModel<Long> {
     @Column(unique = true)
     private String login;
     private String password;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
 
     @Override
     public Long getId() {

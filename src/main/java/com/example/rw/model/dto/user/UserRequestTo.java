@@ -10,17 +10,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserRequestTo {
-
     @NotBlank
     @Size(min = 2, max = 64)
     private String login;
     @NotBlank
-    @Size(min = 8, max = 128)
+    @Size(min = 7, max = 128)
     private String password;
     @NotBlank
     @Size(min = 2, max = 64)
-    private String firstName;
+    private String firstname;
     @NotBlank
     @Size(min = 2, max = 64)
-    private String lastName;
+    private String lastname;
+    private Long id;
 }

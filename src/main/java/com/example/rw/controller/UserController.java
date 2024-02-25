@@ -1,8 +1,10 @@
 package com.example.rw.controller;
 
+import com.example.rw.exception.model.not_found.EntityNotFoundException;
 import com.example.rw.model.dto.user.UserRequestTo;
 import com.example.rw.model.dto.user.UserResponseTo;
 import com.example.rw.model.entity.implementations.User;
+import com.example.rw.repository.implementations.jpa.CustomUserRepository;
 import com.example.rw.service.db_operations.interfaces.UserService;
 import com.example.rw.service.dto_converter.interfaces.UserToConverter;
 import jakarta.validation.Valid;
@@ -21,14 +23,15 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("${api.request.prefix}/user")
+@RequestMapping("${api.request.prefix}/users")
 @RequiredArgsConstructor
 public class UserController {
 
+    private final CustomUserRepository customUserRepository;
     private final UserService userService;
     private final UserToConverter userToConverter;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<UserResponseTo> createUser(@RequestBody @Valid UserRequestTo userRequestTo) {
         User user = userToConverter.convertToEntity(userRequestTo);
         userService.save(user);
@@ -38,7 +41,7 @@ public class UserController {
                 .body(userResponseTo);
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<List<UserResponseTo>> receiveAllUsers() {
         List<User> users = userService.findAll();
         List<UserResponseTo> responseList = users.stream().map(userToConverter::convertToDto).toList();
@@ -51,20 +54,23 @@ public class UserController {
         return ResponseEntity.ok(userResponseTo);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<UserResponseTo> updateUser(@PathVariable Long id, @RequestBody @Valid UserRequestTo userRequestTo) {
+    @PutMapping()
+    public ResponseEntity<UserResponseTo> updateUser(@RequestBody @Valid UserRequestTo userRequestTo) {
         User user = userToConverter.convertToEntity(userRequestTo);
-        user.setId(id);
-        userService.save(user);
+        userService.update(user);
         UserResponseTo userResponseTo = userToConverter.convertToDto(user);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(userResponseTo);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        userService.deleteById(id);
+        try {
+            userService.deleteById(id);
+        } catch (EntityNotFoundException entityNotFoundException){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -49,7 +49,7 @@ public abstract class DefaultInMemoryRepository<I, E extends EntityModel<I>> imp
     }
 
     @Override
-    public void save(E entity) {
+    public E save(E entity) {
         if(entity.getId() == null) {
             entity.setId(incrementAndGetId());
         }
@@ -59,17 +59,16 @@ public abstract class DefaultInMemoryRepository<I, E extends EntityModel<I>> imp
         } finally {
             readWriteLock.writeLock().unlock();
         }
+        return entity;
     }
 
     @Override
-    public boolean deleteById(I id) {
-        boolean result;
+    public void deleteById(I id) {
         readWriteLock.writeLock().lock();
         try {
-            result = repository.remove(id) != null;
+            repository.remove(id);
         } finally {
             readWriteLock.writeLock().unlock();
         }
-        return result;
     }
 }

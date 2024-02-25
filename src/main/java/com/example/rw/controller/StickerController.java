@@ -1,5 +1,6 @@
 package com.example.rw.controller;
 
+import com.example.rw.exception.model.not_found.EntityNotFoundException;
 import com.example.rw.model.dto.sticker.StickerRequestTo;
 import com.example.rw.model.dto.sticker.StickerResponseTo;
 import com.example.rw.model.entity.implementations.Sticker;
@@ -21,14 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("${api.request.prefix}/sticker")
+@RequestMapping("${api.request.prefix}/stickers")
 @RequiredArgsConstructor
 public class StickerController {
 
     private final StickerService stickerService;
     private final StickerToConverter stickerToConverter;
 
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<StickerResponseTo> createSticker(@RequestBody @Valid StickerRequestTo stickerRequestTo) {
         Sticker sticker = stickerToConverter.convertToEntity(stickerRequestTo);
         stickerService.save(sticker);
@@ -38,7 +39,7 @@ public class StickerController {
                 .body(stickerResponseTo);
     }
 
-    @GetMapping("/list")
+    @GetMapping()
     public ResponseEntity<List<StickerResponseTo>> receiveAllStickers() {
         List<Sticker> stickers = stickerService.findAll();
         List<StickerResponseTo> responseList = stickers.stream()
@@ -54,18 +55,21 @@ public class StickerController {
         return ResponseEntity.ok(stickerResponseTo);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<StickerResponseTo> updateSticker(@PathVariable Long id, @RequestBody @Valid StickerRequestTo stickerRequestTo) {
+    @PutMapping()
+    public ResponseEntity<StickerResponseTo> updateSticker(@RequestBody @Valid StickerRequestTo stickerRequestTo) {
         Sticker sticker = stickerToConverter.convertToEntity(stickerRequestTo);
-        sticker.setId(id);
         stickerService.save(sticker);
         StickerResponseTo stickerResponseTo = stickerToConverter.convertToDto(sticker);
         return ResponseEntity.ok(stickerResponseTo);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStickerById(@PathVariable Long id) {
-        stickerService.deleteById(id);
+        try {
+            stickerService.deleteById(id);
+        } catch (EntityNotFoundException entityNotFoundException){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

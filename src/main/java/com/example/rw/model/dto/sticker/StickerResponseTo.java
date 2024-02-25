@@ -13,5 +13,5 @@ import java.util.List;
 public class StickerResponseTo {
 
     private String name;
-    private List<Long> newsId;
+    private Long id;
 }

@@ -1,6 +1,7 @@
 package com.example.rw.service.db_operations.implementations;
 
 import com.example.rw.exception.model.not_found.EntityNotFoundException;
+import com.example.rw.model.entity.implementations.News;
 import com.example.rw.model.entity.implementations.User;
 import com.example.rw.repository.interfaces.UserRepository;
 import com.example.rw.service.db_operations.interfaces.UserService;
@@ -34,9 +35,21 @@ public class CustomUserService implements UserService {
 
     @Override
     public void deleteById(Long id) throws EntityNotFoundException {
-        boolean wasDeleted = userRepository.deleteById(id);
+        boolean wasDeleted = userRepository.findById(id).isPresent();
         if(!wasDeleted){
             throw new EntityNotFoundException(id);
+        } else{
+            userRepository.deleteById(id);
+        }
+    }
+
+    @Override
+    public void update(User entity) {
+        boolean wasUpdated = userRepository.findById(entity.getId()).isPresent();
+        if(!wasUpdated){
+            throw new EntityNotFoundException();
+        } else{
+            userRepository.save(entity);
         }
     }
 }

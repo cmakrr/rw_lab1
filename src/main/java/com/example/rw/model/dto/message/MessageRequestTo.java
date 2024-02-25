@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageRequestTo {
-
     @NotBlank
     @Size(min = 2, max = 2048)
     private String content;
+    private Long id;
     private Long newsId;
 }

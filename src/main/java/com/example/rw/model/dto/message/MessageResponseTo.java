@@ -11,4 +11,5 @@ public class MessageResponseTo {
 
     private String content;
     private Long newsId;
+    private Long id;
 }
